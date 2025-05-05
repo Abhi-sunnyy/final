@@ -26,13 +26,33 @@ console.log('Environment check - MONGODB_URI:', process.env.MONGODB_URI ? 'Set' 
 
 const app = express();
 
-// CORS configuration
+// // CORS configuration
+// const corsOptions = {
+//   origin: process.env.FRONTEND_URL || '*',
+//   credentials: true,
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization']
+// };
+
+
+const allowedOrigins = [
+  'https://frontend-lime-six-62.vercel.app',
+  'https://frontend-kuk3.onrender.com'
+];
+
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || '*',
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS not allowed from this origin: ' + origin));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };
+
 
 // Middleware
 app.use(cors(corsOptions));
